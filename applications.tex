@@ -5,21 +5,37 @@
 \subsubsection{Time frame}
 
 \begin{itemize}
-\item Long-term (days/weeks/months): Mission control. 
+\item Long-term (days/weeks/months): Mission control.
 
-    Highly complex human planning. Individual teams for individual aspects. Highly interdependent problems (e.g. energy management/solar panels/trajectory planning), global constraint resolution in f2f meetings. 
+    Highly complex human planning. Individual teams for individual
+    aspects. Highly interdependent problems (e.g. energy
+    management/solar panels/trajectory planning), global constraint
+    resolution in f2f meetings.
     
-    Very difficult/impossible to model precisely. Lots of human judgement in what can/cannot be done, safety margins etc. No complete, global mathematical formulation (individual subsystems do have quite complex models, esp. power, attitude, thermal, life support), or even if so not reliable (considerable built-in margin to ensure safety).
+    Very difficult/impossible to model precisely. Lots of human
+    judgement in what can/cannot be done, safety margins etc. No
+    complete, global mathematical formulation (individual subsystems
+    do have quite complex models, esp. power, attitude, thermal, life
+    support), or even if so not reliable (considerable built-in margin
+    to ensure safety).
     
-    Some interest in automation (mostly for checking constraints, some for plan repair, less for 'de-novo' synthesizing full plans). Potential scalability issues (too many different spacehips to control) not on horizon. Main automation issue is different time frames see below.
+    Some interest in automation (mostly for checking constraints, some
+    for plan repair, less for 'de-novo' synthesizing full
+    plans). Potential scalability issues (too many different spacehips
+    to control) not on horizon. Main automation issue is different
+    time frames see below.
     
 \item Short-term immediate reaction (seconds): Emergency procedures.
 
-    Possible emergencies that require immediate reaction essentially mapped out and trained for.
+    Possible emergencies that require immediate reaction essentially
+    mapped out and trained for.
 
-\item Mid-term (hours/1 day), with significant communication delays (one direction 2.5 min to Mars at close approach, or 22 min to Mars at furthest distance): Target for automation.
+\item Mid-term (hours/1 day), with significant communication delays
+  (one direction 2.5 min to Mars at close approach, or 22 min to Mars
+  at furthest distance): Target for automation.
 
-    Ultimate goal/desire from crews: "replace mission control" in answering of questions "what should we do right now?".
+    Ultimate goal/desire from crews: "replace mission control" in
+    answering of questions "what should we do right now?".
     
 \end{itemize}
 
@@ -29,21 +45,37 @@
 \begin{itemize}
 \item Safety margins
 
-    Plan at abstract level, over- or under-approximation of safe behaviour.
+    Plan at abstract level, over- or under-approximation of safe
+    behaviour.
     
-    Can only ever be decision support/suggestion system, not fully automatic control.
+    Can only ever be decision support/suggestion system, not fully
+    automatic control.
     
-    A lot of planning takes place to stay far away from anything that could develop into a safety-critical situation.
+    A lot of planning takes place to stay far away from anything that
+    could develop into a safety-critical situation.
     
-\item Critical tasks: 
+\item Critical tasks:
 
-    The usual way time- and safety-criticality is discussed is in order of severity of tasks.  In decreasing order of severity: 'loss of crew' (someone will be injured or die), 'loss of vehicle' (the spacecraft is going to be destroyed or damaged', 'loss of mission' (the actual mission objective can't be achieved but the spacecraft and crew will be fine', and then on to various 'degradations', 'inefficiencies' (in time, resource use, etc.)
+    The usual way time- and safety-criticality is discussed is in
+    order of severity of tasks.  In decreasing order of severity:
+    'loss of crew' (someone will be injured or die), 'loss of vehicle'
+    (the spacecraft is going to be destroyed or damaged', 'loss of
+    mission' (the actual mission objective can't be achieved but the
+    spacecraft and crew will be fine', and then on to various
+    'degradations', 'inefficiencies' (in time, resource use, etc.)
     
-    The usual way of handling the worst safety critical tasks is that the crew simply drops everything and does what is needed, right away.  Planning as we envision it usually requires time to think.  So situations in which replanning takes place will be somewhat less critical cases, or recovery after a major event when things are stabilized.
+    The usual way of handling the worst safety critical tasks is that
+    the crew simply drops everything and does what is needed, right
+    away.  Planning as we envision it usually requires time to think.
+    So situations in which replanning takes place will be somewhat
+    less critical cases, or recovery after a major event when things
+    are stabilized.
 
-\item At design-time, use explainability as a tool towards refining the system/to eventually establish trust of mission control experts into the system.
+\item At design-time, use explainability as a tool towards refining
+  the system/to eventually establish trust of mission control experts
+  into the system.
 
-    \question{What kind of system refinement operations make sense here?}
+    What kind of system refinement operations make sense here?
 
 \end{itemize}
 
@@ -54,13 +86,26 @@
 
 \item Make the best of available channel.
     
-\item Big question of human factors: How to communicate in an X-minutes delay setting? HCI research here. Simple measures like non-verbal communication/logs already seem to help a lot.
+\item Big question of human factors: How to communicate in an
+  X-minutes delay setting? HCI research here. Simple measures like
+  non-verbal communication/logs already seem to help a lot.
     
-\item From planning perspective: mission control is a kind of oracle with delay (physical to/fro + estimated mission-control thinking time).
+\item From planning perspective: mission control is a kind of oracle
+  with delay (physical to/fro + estimated mission-control thinking
+  time).
     
-\item $\Rightarrow$ Interactive planning with delay? Interesting option. Need "interactive planning" framework first. Suggesting plans, accommodate plan feedback in next iteration? Iterative plan, question, explain framework as per Dan/Joerg AFOSR proposal, Section~\ref{xpp}? Human input in form of search guidance? Real-time aspects could also play a role here: make the best of the planning time available til the next round of feedback.
+\item $\Rightarrow$ Interactive planning with delay? Interesting
+  option. Need "interactive planning" framework first. Suggesting
+  plans, accommodate plan feedback in next iteration? Iterative plan,
+  question, explain framework as per Dan/Joerg AFOSR proposal,
+  Section~\ref{xpp}? Human input in form of search guidance? Real-time
+  aspects could also play a role here: make the best of the planning
+  time available til the next round of feedback.
     
-\item $\Rightarrow$ Simpler framework: incorporate feedback not into planning process itself, but into the plan. Temporal concurrent contingent planning where sensing actions model mission control feedback, with duration corresponding to delay?
+\item $\Rightarrow$ Simpler framework: incorporate feedback not into
+  planning process itself, but into the plan. Temporal concurrent
+  contingent planning where sensing actions model mission control
+  feedback, with duration corresponding to delay?
     
 \end{itemize}
 
@@ -72,17 +117,26 @@
 
 \item Abstract models:
 
-    May be useful to link explicitly, via predicate characterizations, to low-level state and behaviour (Jeremy prior work): detect inconsistencies, model refinement, etc.
+    May be useful to link explicitly, via predicate characterizations,
+    to low-level state and behaviour (Jeremy prior work): detect
+    inconsistencies, model refinement, etc.
  
 \item Build on established procedures:
 
     Comprehensive coded responses to events etc.
     
-    Highly complex, difficult to process for humans, case distinctions etc.
+    Highly complex, difficult to process for humans, case distinctions
+    etc.
     
-    Extreme end: "planning" would "just" instantiate standard procedures to current situation. But usually things are not this simple.  Procedures are very general conditional plans, so some amount of thought about how they apply is often needed.  Depending on circumstances, procedure duration and required resources change a lot. 
+    Extreme end: "planning" would "just" instantiate standard
+    procedures to current situation. But usually things are not this
+    simple.  Procedures are very general conditional plans, so some
+    amount of thought about how they apply is often needed.  Depending
+    on circumstances, procedure duration and required resources change
+    a lot.
     
-    Therefore: planning = search over degrees of freedom within standard procedures?
+    Therefore: planning = search over degrees of freedom within
+    standard procedures?
     
 \end{itemize}
 
@@ -94,29 +148,39 @@
 
 \begin{itemize}
 
-\item Temporal planning, but sequential. Currently PDDL2.1. Need "temporal flexibility" if things go wrong.
+\item Temporal planning, but sequential. Currently PDDL2.1. Need
+  "temporal flexibility" if things go wrong.
 
 \item Partial contingency planning at design-time/offline:
 
     Action duration intervals, lower bound / average / upper bound
     
-    Plan for average durations, insert contingencies "where most pertinent"
+    Plan for average durations, insert contingencies "where most
+    pertinent"
     
     Observation/sensing on conditions at time points
     
-    "Pertinent" quantitatively in terms of degree of violation if deviations from average case
+    "Pertinent" quantitatively in terms of degree of violation if
+    deviations from average case
     
-    RFF-style algorithm (see work by Teichteil-Koenigsbuch) to incrementally build partial policy, possibly by outer loop around standard temporal planner?
+    RFF-style algorithm (see work by Teichteil-Koenigsbuch) to
+    incrementally build partial policy, possibly by outer loop around
+    standard temporal planner?
     
-    Note: in sequential setting, time can be treated as a state variable
+    Note: in sequential setting, time can be treated as a state
+    variable
     
     Ex. early work by Dave Smith et al in a Europa context
 
-\item Flexible dispatching/plan flexibility/robustness at execution-time/online:
+\item Flexible dispatching/plan flexibility/robustness at
+  execution-time/online:
 
-    Suitable where degree of flexibility required is small enough to not require full-scale replanning
+    Suitable where degree of flexibility required is small enough to
+    not require full-scale replanning
     
-\item Disjunctive STNs with duration uncertainty: lighter-weight alternative to contingency planning, disjunctions model alternate ways to reach a node
+\item Disjunctive STNs with duration uncertainty: lighter-weight
+  alternative to contingency planning, disjunctions model alternate
+  ways to reach a node
     
 \end{itemize}
 
@@ -132,6 +196,7 @@
 
 \item Robot w/o legs, propelled by fans
    
-\item If several robots, multi-agent path planning becomes relevant here? With uncertainty about the destinations of human agents?
+\item If several robots, multi-agent path planning becomes relevant
+  here? With uncertainty about the destinations of human agents?
   
 \end{itemize}
