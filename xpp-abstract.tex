@@ -1,0 +1,107 @@
+
+\section{AFOSR Project: Abstract from project proposal}
+\label{sec:afosr-abstractr}
+
+In today's technological development, more and more technical systems
+will take action decisions traditionally taken by humans. Where such
+decisions directly affect economic value, or even human lives, it is
+crucial for human users to be able to \textbf{check the decision
+  rationales}. The ability to explain decisions suggested by a
+computer system is, therefore, increasingly recognized as crucial to
+the success and practicality of such systems.
+
+The objective of the proposed project is to establish
+\textbf{explanation facilities for AI Planning}, in terms of a
+\textbf{Q\&A process}. Like other model-based control methodologies --
+in difference to model-free control through ML methods -- AI Planning
+lends itself naturally to explanation, as the reasoning process behind
+the suggested decisions is explicit and can, in principle, be checked
+by the human user. The difficulty then lies in actually making such
+reasoning -- enumerating vast spaces of alternate decisions --
+amenable to human users. Our central thesis is that this can be
+naturally done in terms of \textbf{explaining the space of plans},
+pointing out the most relevant \textbf{plan properties} and their
+\textbf{dependencies}.
+
+For example, in a robotics-planning application supporting underwater
+vehicle control, given a plan of action suggested by the system, the
+user may ask ``why not cover objective $x$?''; the answer could be
+``covering $x$ would either require excessive time or energy, or
+result in abandoning $y$ or $z$''.
+Such an answer would be derived by considering the space of relevant
+plan properties -- objectives covered, energy consumption, time -- and
+examining their relative behavior within the space of plans. A user
+question then translates into an enforced plan property $p$ (cover
+objective $x$), and the answer is given in terms of the most relevant
+(detrimental/non-trivial) plan properties $q$ entailed by $p$.
+
+Given such an answer, the user may choose to ask a different question,
+or -- if $p$ is desirable despite $q$ -- request an alternative plan
+satisfying $p$. The Q\&A process then iterates until the user is
+satisfied with the plan. Observe that, beyond explaining the system's
+decisions to the user, such a process serves additional purposes:
+\begin{itemize}
+\item \textbf{The elaboration of user preferences}, often reflected
+  imperfectly by the model, through an explanation-guided
+  example-critiquing process.
+\item \textbf{Interactive planning} via plan constraints iteratively
+  imposed by the user, with in-depth support for understanding the
+  implications of these constraints.
+\end{itemize}
+For example, previous work has proposed CyberSecurity applications
+supporting network security penetration testing (pentesting) through
+the identification of possible attack plans. The user preference here
+pertains to the value of assets in the network, which is notoriously
+hard to quantify; and interactive planning is key support for
+elaborating a defense strategy. The Q\&A process then involves user
+questions like ``what if I reconfigure host $x$ to remove the
+vulnerability exploited here?'', and answers like ``the attack will
+diverge to host $y$ instead, which would incur a high risk of being
+detected''.
+
+The proposed project will realize such a Q\&A analysis framework for
+AI Planning. Our approach will be the inference of
+\textbf{plan-property dependency networks (PDN)}. In such a network,
+plan properties are arbitrary Boolean functions on plans;
+and a property $p$ entails a property $q$ if all plans that satisfy
+$p$ also satisfy $q$. For a more fine-grained analysis, we will infer
+probabilistic forms of entailment, where the user preference is
+modeled as a probability distribution over plans, capturing the
+system's uncertainty about the actual user preference. The PDN then is
+a \textbf{Bayesian network (BN) over plan properties}, compactly
+representing dependencies weighted by plan likelihood.
+
+Observe that, given a PDN, we can answer \emph{any} user question
+about the underlying set of plan properties directly: by reading off
+the entailments; and by standard BN reasoning techniques on
+probabilistic dependencies. Thus we can \textbf{build the PDN
+  offline}, performing the costly computations prior to the
+\textbf{online user interaction}.
+
+We will infer PDNs over a given set of properties through
+\textbf{entailment checks}, formulated as planning-task unsolvability
+proofs, where feasible. We will infer probabilistic dependencies
+through \textbf{BN structure inference} from data, i.e., from
+\textbf{sample plans} drawn from the desired probability distribution,
+thus avoiding the -- practically infeasible -- enumeration of all
+plans.
+We will investigate the adequacy and feasibility of \textbf{causality}
+analysis, i.e.\ the inference of cause-effect relations, in this
+context. We will automate the \textbf{extraction of relevant plan
+  properties} by generalizing from example plans through inductive
+learning, identifying new composed properties that exhibit relevant
+behavior (\eg, ``use excessive time or energy, or abandon $y$ or
+$z$'').
+We will develop user interfacing and user adaptation methods to
+conveniently design, navigate, and modify the set of plan properties
+considered.
+
+We will realize this technology in \textbf{classical planning} first,
+then investigate extensions to \textbf{temporal planning}, planning
+under \textbf{limited resources}, and \textbf{oversubscription
+  planning} (maximizing the reward from achieved goals subject to a
+fixed resource budget). We will develop application demonstrators, on
+top of a realistic ROS simulator for \textbf{underwater vehicle
+  control}, and on top of realistic network data for
+\textbf{pentesting}.
+

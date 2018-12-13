@@ -1,0 +1,29 @@
+\section{XPP: Explaining the Space of Plans through Plan-Property Dependencies (Joerg \& Dan AFOSR Project)}
+\label{xpp}
+
+Executive abstract: identify implications over Boolean plan properties, a la "if a plan has property A then it must have/cannot have property B"; 2) instead of just computing these implications over a given set of dependencies, automatically "mine" the task for the most relevant properties given the user's interests. More details see Appendix~\ref{sec:afosr-abstractr}.
+
+Paper in preparation for IJCAI'19: introduces generic framework; instantiates that framework with goal-fact-conjunction dependencies in oversubscription planning (like classical planing but with a single consumed resource of which not enough is given to achieve all goals); shows that the analysis for "action constraints" (plan properties taking the form of propositional formulas over the atoms "plan uses at least one action from action subset $A_i$", where $A_i$ is from a given collection of distinguished action subsets) can be compiled into the analysis of goal-fact-conjunction dependencies; shows that LTL plan trajectory constraints can be compiled into the analysis of goal-fact-conjunction dependencies; runs experiments on adapted IPC benchmarks. 
+
+
+\joerg{TODO: aggregate discussion notes, different future directions, application scenarios, concrete benchmarks}
+
+
+
+
+\subsection{Application in Mission Planning}
+
+Over-subscription setting in online/mid-term scenario when something went wrong and not all objectives can be achieved anymore. Properties e.g. achieving an objective, using/not using a certain device, energy consumption, meeting/not meeting a deadline.
+
+\begin{itemize}
+\item The simplest version of this is if some task takes much longer than anticipated; as this happens, the ongoing decisions are: 1) keep going with this task (because it is important or urgent) and not do something else?  2) interrupt this task to do something even more important/urgent?  3) stop doing this task because it's not that important/urgent and it can be done later?
+\item Aside: some tasks take a very long time (days), and are interruptible.
+\item In this setting, the approach would at design-time address questions what implications a delay has, according to the model, on other tasks; at execution time the approach could serve as an iterative planning tool, enforcing delays if the consequences are ok. 
+
+Note though: an inherent limitation here is that, the way the approach is formulated with plan properties being Boolean functions, that the set of plan properties considered would have to discretize the possible time points of task completion, ie the "delays" to consider would have to be a fixed set of constants.
+
+\end{itemize}
+
+
+
+
