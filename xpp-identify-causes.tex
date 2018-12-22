@@ -1,0 +1,236 @@
+\section{XPP: Identifying Causes behind a Dependency}
+\label{xpp-identify-causes}
+
+Scenario: given dependency $\entails{\plans}{\prop}{\propq}$. User
+asks ``why does this dependency hold?''. How to answer that question?
+
+
+
+\subsection{General Notes}
+
+Could result in user dialogue of WHY questions going deeper at
+selected points.
+
+Two different approaches:
+\begin{itemize}
+\item Modifying the set of Analyzed Plan Properties
+
+  Addresses WHY question in sense of ``elaborate the causal chain
+  behind this dependency'', give more fine-grained information. Which
+  intermediate properties are on the causal chain leading to
+  $\entails{\plans}{\prop}{\propq}$?
+
+\item Modifying the set of Enforced Plan Properties
+
+  Addresses HOW question in sense of ``which enforced properties do I
+  need to relax to get rid of this dependency''. Identify minimal
+  relaxation under which $\entails{\plans}{\prop}{\propq}$ disappears.
+
+  Ideally the answer should be ``actionable'' (or ``variable'', as
+  opposed to ``fixed'') ie we should relax only properties that we can
+  actually change if we want to.
+
+  A milder form of this is to relax \prop.
+
+\end{itemize}
+
+Combinations of the two could also make sense.
+
+
+
+
+\subsection{Modifying the set of Analyzed Plan Properties}
+\label{xpp:identify-causes:analyzed}
+
+
+Modify \props\ to make explicit the ``causal chain'' between
+\prop\ and \propq. 
+
+Modification operators: canonically, adding a new property $p \in
+\candprops \setminus \props$. But removing/replacing a property could
+also be of interest.
+
+Selection of modifications must be linked to planning semantics, eg
+cause for $\entails{\plans}{\true}{taskAafter4pm}$ could be other
+things that must be done before task A, or could be energy consumption
+at different times of day. Critical path analysis /
+precondition/effect analysis / planning sub-problem analysis?
+
+
+Distinguish between the properties \props\ currently being analyzed,
+and the entire set of candidate properties \candprops\ that could be
+in \props.
+
+
+\paragraph{Modification as ``abstraction refinement''?}
+
+Navigate in lattice of equivalence relations in the PDO? Split
+equivalence classes by introducing new properties making cas
+distinctions within? Minimizing number of new properties needed,
+splitting ``down the middle''? 
+
+Not an immediate correspondence, but could be useful.
+
+1. in difference to abstractions \props\ covers only a subset of all
+possible plan properties, rather than being exhaustive (entire state
+space). That is, within each equivalence class we only have a subset
+of the equivalent properties, and also the union of equivalence
+classes is less than \candprops.
+
+2. while in abstractions we just pretend for states to be equivalent
+and are free to change our pretence in any way, here we have an
+underlying semantics that fixes how things relate.
+
+What comes closest to a refinement step seems to be this: for some $p
+\in \props$, replace $p$ with a set of properties conjoining $p$ with
+a case distinction, eg $p \wedge q$ and $p \wedge \neg q$. generally:
+select a DNF tautology $\bigvee_{i=1}^n \phi_i$ and replace $p$ with
+$\{p \wedge \phi_i\}$. This introduces $n$ equivalence classes each of
+which entails $p$ ie is ordered before $\equiv{\plans}{\prop}$ in the
+PDO, and where the disjunction of representatives is a member of
+$\equiv{\plans}{\prop}$.
+
+There does not seem to be a need though to use only this specific kind
+of refinement. Adding arbitrary $p \in \candprops \setminus \props$
+can be useful, see the following example.
+
+
+
+
+
+\paragraph{Example: navigation on a map with fuel consumption}
+
+State variables ``connected'' (static), ``at'', ``fuel'', ``visited''
+remembering the locations one has been to; actions ``move''.
+
+There are no enforced plan properties, so \plans\ is the set of all
+action sequences are applicable in the initial state.
+
+Concrete example: line of locations $l_{-3} ... l_3$. Initially at
+$l_0$. Initial fuel $f$ something with $0 < f < 9$, let's say $f = 8$
+for simplicity.
+
+Plan properties \candprops\ considered: propositional formulas $\phi$
+over state variable values $x$ and end-of-plan state variable values
+$END x$, where $x$ is true if true anywhere along trajectory and $END
+x$ is true if true at end of trajectory.
+
+Analyzed properties: initially $END visited(l_{-3})$, $END
+visited(l_3)$, $END \neg visited(l_{-3})$, $END \neg visited(l_3)$. As
+there is not enough fuel to visit both, we get the dependencies
+$\entails{\plans}{END visited(l_{-3})}{END \neg visited(l_3)}$ and
+$\entails{\plans}{END visited(l_3)}{END \neg visited(l_{-3})}$.
+
+To answer a WHY question reg these dependencies, how do we modify
+\props? It seems what we need to do is add conjunctions capturing the
+prerequisites for visiting both $l_{-3}$ and $l_3$. 
+
+This seems to relate to finding a set $C$ of conjunctions leading to
+$h^C(I) = \infty$ ... not sure though it's really the same thing.
+
+If we add the properties $\{at(l_i)\}$ then we get dependencies of the
+form $\entails{\plans}{at(l_i)}{at(l_{i-1})}$ for $i > 0$ and
+$\entails{\plans}{at(l_{i+1})}{at(l_{i})}$ for $i < 0$, as well as
+$\entails{\plans}{visited(l_{-3})}{at(l_{-3})}$ and
+$\entails{\plans}{visited(l_{3})}{at(l_{3})}$.
+
+This needs to be further refined. The simplest chain of dependencies
+-- chain maximally fine-grained ands each element minimally
+restrictive -- I can think up (using numeric inequalities as
+abbreviation for disjunction over fuel values) is: $END visited(l_{3})
+\Rightarrow$ $END visited(l_{3}) \wedge at(l_{1}) \wedge fuel \leq 7
+\Rightarrow$ $END visited(l_{3}) \wedge at(l_{2}) \wedge fuel \leq 6
+\Rightarrow$ $at(l_{3}) \wedge fuel \leq 5 \Rightarrow$ $END
+visited(l_{-3}) \longrightarrow at(l_{2}) \wedge fuel \leq 4
+\Rightarrow$ $END visited(l_{-3}) \longrightarrow at(l_{1}) \wedge
+fuel \leq 3 \Rightarrow$ $END visited(l_{-3}) \longrightarrow
+at(l_{0}) \wedge fuel \leq 2 \Rightarrow$ $END visited(l_{-3})
+\longrightarrow at(l_{-1}) \wedge fuel \leq 1 \Rightarrow$ $END
+visited(l_{-3}) \longrightarrow at(l_{-2}) \wedge fuel \leq 0
+\Rightarrow$ $END visited(l_{-3}) \longrightarrow fuel < 0
+\Leftrightarrow$ $END visited(l_{-3}) \longrightarrow \false \Rightarrow$
+$END \neg visited(l_{-3})$.
+
+\joerg{must it really be that awkward? TBD}
+
+%% Consider properties of the form $\{visited(l_{3}) \wedge at(l_i)
+%% \wedge fuel \leq x\}$. \joerg{TBD}
+%
+%% Note that we're leaving the realm of
+%% propositional formulas \candprops\ here, adding numeric inequalities
+%% over resources into the bargain. We have the dependencies:
+%% $\entails{\plans}{visited(l_{3})}{visited(l_{3}) \wedge at(l_{3})
+%%   \wedge fuel \leq 5}$, $\entails{\plans}{visited(l_{3}) \wedge
+%%   at(l_{3}) \wedge fuel \leq 5}{visited(l_{3}) \wedge at(l_{2}) \wedge
+%%   fuel \leq 6}$, $\entails{\plans}{at(l_{2}) \wedge fuel \leq
+%%   6}{at(l_{1}) \wedge fuel \leq 7}$, $\entails{\plans}{at(l_{1})
+%%   \wedge fuel \leq 7}{at(l_{0}) \wedge fuel \leq 8}$. Note that we're
+%% leaving the realm of propositional formulas \candprops\ here, adding
+%% numeric inequalities over resources into the bargain.
+%
+%% Now we could add properties $\{at(l_i) \wedge fuel \leq 8-i\}$
+
+
+
+\paragraph{How to find new properties along the causal chain?}
+
+Relates to regression/prerequisites.
+
+Glean the relevant props from plan? Unclear because dependeny is about
+something that canNOT happen, eg object $A$ entails not object $B$; in
+the above example, the fuel problem arises only when trying to achieve
+both objectives.
+
+\cool{almost-plan: tolerate conflicts in plan; find min-conflict plan
+  that achieves $A$ and $B$. $\Rightarrow$ glean props true along this
+  plan?  Focus on conflict points? Focus on actionable props?}
+
+
+
+
+
+
+  
+
+
+\subsection{Modifying the set of Enforced Plan Properties}
+\label{xpp:identify-causes:enforced}
+
+Critical path analysis in scheduling relates to identifying causes,
+taking which away removes the issue. Here: the hard constraints which
+cause the dependency.
+
+$\Rightarrow$ Find minimal weakening of enforced properties under
+which $\entails{\plans}{\prop}{\propq}$ disappears?
+
+Simple method remove minimal number of enforced properties. More
+complex methods could split enforced properties into case distinctions
+and remove only some of those cases.
+
+How to capture ``change init fuel to 8 is better than change init fuel
+to 9''? Need input cost fn for modifications?
+
+Close relation to BN excuses for ``A and not B is unsolvable'', check
+their approach and what it does here; also some follow-up appeared
+more recently? 
+
+Relation to model abstraction a la ASU? Refining the enforced
+properties until their effect ie the entailment relation in \plans\ is
+reconciled with the user expectations?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

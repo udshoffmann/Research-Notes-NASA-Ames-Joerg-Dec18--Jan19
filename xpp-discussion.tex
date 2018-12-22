@@ -1,0 +1,305 @@
+\section{XPP: Other Discussion Notes}
+\label{xpp-discussion}
+
+
+
+
+
+\subsection{Framework}
+
+\begin{itemize}
+\item Task properties? Boolean properties of task? Use these in our
+  analyses just like plan properties?
+
+  Totally relevant in planning with resources. Widen time windows a
+  little bit in Rovers domain. 
+
+  Seems crucial for HOW type of questions, with actionable changes
+  becoming task properties.
+
+  Formal handling: \plans\ changes as function of task properties. But
+  straightforward when making enforced vs analyzed property sets
+  explicit.
+
+\item Discretization vs framework with numeric-valued plan properties
+
+  Is there a way to get around need to discretize into Boolean
+  properties? No ideas for this right now. 
+
+  Discretization seems doable/Ok. Main issue is size, many props
+  needed, combinatorial explostion of analysis. 
+
+  $\Rightarrow$ How to effectively discretize, how to choose
+  thresholds?
+
+  Generalize from example instances?
+
+  Instance-dependent: generate some example plans, glean relevant
+  thresholds from there? (relats to user dialogue where user points
+  out relevant/problematic properties of example plans).
+
+\item Allow plan properties given as blackbox code supplied by user?
+
+\item Flexibility: 
+
+  Proxy for risk which is one source of preferences ie one
+  soft/analyzed property to consider.
+
+  Could think about making it a first-class citizen instead, but this
+  would seem to basically just turn into an explicit user preference
+  so it either relates to enforced plan properties or to a combination
+  with user preferences.
+
+\item Probability distribution over \plans, causality: Jeremy is
+  unconvinced. The former conflicts with trade-off explicitation; the
+  latter is explicitly captured in the planning state transition model
+  if you're interested in it.
+
+\item Only satisfiably plan props are of interest (in practice: filter
+  unsat ones out first)
+
+\end{itemize}
+
+
+
+
+\subsection{Computation}
+
+\begin{itemize}
+\item Compute \plans\ once and then use it for everything?
+
+\item \cool{BDDs for some of these computations? represent the set
+  \plans?}
+
+\item When using off the shelf planner to decide entailment: compile
+  properties into derive predicates; could be a convenient tool /
+  elegant write-up.
+
+\item Approximation: compute \plans' subset or superset of \plans, test
+  properties/dependencies against \plans'.
+
+  Subset: counter-examples/falsify dependencies.
+
+  Superset: sufficient criteria finding subset of valid dependencies.
+
+  eg planning graph represents superset of \plans; mutex analysis is a
+  special case of this very general framework.
+
+\item Too many properties to analyze all dependencies, how to select
+  relevant parts of PDO to be computed?
+
+  Relates to user dialogue in interactive setting.
+
+  Automatic property subset selection relates to property mining.
+
+  Can we identify interesting dependencies, ie property pairs rather
+  than properties, from example plans?
+
+\end{itemize}
+
+
+
+
+
+\subsection{XPP vs User Preferences}
+
+\begin{itemize}
+\item PDO relation to preference hierarchy? pref $p$ is stronger than
+  $q$ is what it says; but importance to user is not there.
+
+\item In iterative-planning application scenario, user preference
+  incomplete is assumed: plan generator cannot generate unique most
+  preferred solution with an up-front spec of preferences, else the
+  iterative process would be useless.
+
+\item Moving border between hard vs soft constraints as you go along,
+  in the iterative process. makes sense both for iterative process and
+  for computation.
+
+\item There are three reasons for preference issues between user vs
+  computer:
+
+  1. different computational power, ie bounded rationality on part of
+  user; eg ``why do we do task A after 4 pm?'' ie a dependency
+  $\entails{\plans}{\true}{taskAafter4pm}$, or brilliant computer go
+  move not understood by user.
+
+  2. model differences (preconditions etc).
+
+  3. optimization/preference function not fully specified up front.
+
+  Here we don't address 2. (no explicit support for this; could be a
+  future combination). 3. is naturally addressed in iterative planning
+  process. 1. could be addressed, if we have the right plan properties
+  to elucidate the ``causes'' behind a dependency. Interesting
+  question for future work, see next subsec and
+  Section~\ref{xpp:identify-causes} below.
+
+\item Extension combination with user preferences?
+
+  Combine/multiply/merge PDO with preference model over properties?
+
+  Could eg deal point out inconsistent preferences
+
+\item Ground prefs in the reality of feasible solutions, ie compute
+  exact space of feasible preferred solutions. Not sure whether it
+  makes sense computationally to first compute the entire PDO for this
+  purpose though.
+
+\item Or perhaps a more interactive approach where the PDO is
+  navigated guided by user preferences, or vice versa user preferenes
+  are navigated guided by the PDO?
+
+\end{itemize}
+
+
+
+
+
+
+
+\subsection{Generating Properties Relevant to User}
+
+Mining as per proposal: start from seed set \props, compare example
+plans with \prop\ vs $\neg \prop$, identify relevant differences based
+on some sort of information about what's relevant to user, use
+inductive learning to characterize these differenes with new plan
+properties,
+
+\begin{itemize}
+\item Concrete example in oversubscription planning:
+
+  User declared he cares about scientific objectives and energy
+  consumption. Seed property objective A. In example plans with A we
+  either don't have B, or don't have C, or consume a lot of energy. In
+  example plans without A we sometimes have B and C and low energy
+  consumption. Infer new property ``B and C and low energy''.
+
+\item E.g. user worries about load balancing, not in \props; how to
+  discover this?
+
+  Proposal mining approach could work in principle, but load blanacing
+  (variance) difficult to discover.
+
+\item Make property mining interactive?
+
+  Take inspiration from preference eicitation, in setting where
+  analyzed properties are soft goals? Similarity is that we are
+  looking for properties relevant to user preference; difference is
+  that our goal is easier, we just need relevance, not a specification
+  characterizing user preferences exactly.
+
+  \cool{Example critiquing style:} Show a plan, user provides
+  properties he likes/does not like, these props are included, and new
+  plan is generated keeping the ``like'' while removing the ``don't
+  like''?  This setup is very close to what
+  \cite{fox:etal:ijcai-ws-17} proposed as a question answering method!
+  That method here bcomes instead an input to our comprehensive
+  analysis. 
+
+\end{itemize}
+
+
+
+
+
+\subsection{User Dialogues / Interfacing}
+
+\begin{itemize}
+\item Example critiquing cf above as interactive way to collect set of
+  relevant properties.
+
+  If generating an alternative plan takes too long, inform user ``I
+  couldn't figure out how to do both $A$ and ``B''? Hm contains very
+  little information. 
+
+  \cool{More interesting: Suggest relaxations that would allow to do
+    this! More fuel, more time, etc. $\Rightarrow$ relaxation
+    operators in search space? relax completely first then accommodate
+    as many constraints as possible?} Note that this relates closely
+  to ``almost plans'' (to be used to find useful new plan properties
+  for causal chain in WHY answer); it also relates to HOW answers, if
+  the relaxations are actionable plan/task properties; also to excuses
+  where basically the suggestion is an excuse. Main difference: online
+  setting where instead of a complete analysis we are trying to be
+  able to have suggestions in case the search for an alternate plan
+  fails.
+
+\item How to navigate the PDO:
+
+  Select/modify subset of property dimensions considered. eg Rovers:
+  xray vs visual given memory/time/uplink passed; total science vs
+  distance traveled; total science vs energy; total data collected vs
+  downlinked given uplink passes.
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+\subsection{Concrete Examples to look at}
+
+\begin{itemize}
+\item Classical planning blocksworld?
+
+  Could be an option if we wanna go extreme on classical setting, and
+  if the blocksworld stuff has phenomena inerestingf to talk a bout
+  with plan properties. TBD.
+
+\item Oversubscription rovers.
+
+  Playground for NASA-style things but in simple basic setting.
+
+  ``Classical'' version of oversubscription planning \ie\ classical
+  planning but too many goals to achieve given amount of one consumed
+  resource.
+
+  Can go for temporal aspects where relevant, including Dan makes
+  sense.
+
+\item Crater reconstruction?
+
+  Sun moves, rover has to take images of crater for 3D reconstruction,
+  imaging depends on rover and sun location.
+
+  Accurate formulation has complex continuous phenomena/consraints.
+
+  Could go for a simple discrete temporal version in PDDL2.2 ie timed
+  initial literals.
+
+\item Mission planning?
+
+  Over-subscription setting in online/mid-term scenario when something
+  went wrong and not all objectives can be achieved
+  anymore. Properties e.g. achieving an objective, using/not using a
+  certain device, energy consumption, meeting/not meeting a deadline.
+
+  The simplest version of this is if some task takes much longer than
+  anticipated; as this happens, the ongoing decisions are: 1) keep
+  going with this task (because it is important or urgent) and not do
+  something else?  2) interrupt this task to do something even more
+  important/urgent?  3) stop doing this task because it's not that
+  important/urgent and it can be done later? Aside: some tasks take a
+  very long time (days), and are interruptible.
+
+  In this setting, the approach would at design-time address questions
+  what implications a delay has, according to the model, on other
+  tasks; at execution time the approach could serve as an iterative
+  planning tool, enforcing delays if the consequences are ok.
+
+  Note though: an inherent limitation here is that, the way the
+  approach is formulated with plan properties being Boolean functions,
+  that the set of plan properties considered would have to discretize
+  the possible time points of task completion, ie the "delays" to
+  consider would have to be a fixed set of constants.
+
+\end{itemize}
+
+
+
