@@ -30,7 +30,8 @@ Two different approaches:
   opposed to ``fixed'') ie we should relax only properties that we can
   actually change if we want to.
 
-  A milder form of this is to relax \prop.
+  A different formulation of this (interchangeable if \plans\ is given
+  as a set of plan properties enforced to be true) is to relax \prop.
 
 \end{itemize}
 
@@ -46,6 +47,10 @@ Combinations of the two could also make sense.
 Modify \props\ to make explicit the ``causal chain'' between
 \prop\ and \propq. 
 
+Distinguish between the properties \props\ currently being analyzed,
+and the entire set of candidate properties \candprops\ that could be
+in \props.
+
 Modification operators: canonically, adding a new property $p \in
 \candprops \setminus \props$. But removing/replacing a property could
 also be of interest.
@@ -57,15 +62,11 @@ at different times of day. Critical path analysis /
 precondition/effect analysis / planning sub-problem analysis?
 
 
-Distinguish between the properties \props\ currently being analyzed,
-and the entire set of candidate properties \candprops\ that could be
-in \props.
-
 
 \paragraph{Modification as ``abstraction refinement''?}
 
 Navigate in lattice of equivalence relations in the PDO? Split
-equivalence classes by introducing new properties making cas
+equivalence classes by introducing new properties making case
 distinctions within? Minimizing number of new properties needed,
 splitting ``down the middle''? 
 
@@ -104,29 +105,31 @@ State variables ``connected'' (static), ``at'', ``fuel'', ``visited''
 remembering the locations one has been to; actions ``move''.
 
 There are no enforced plan properties, so \plans\ is the set of all
-action sequences are applicable in the initial state.
+action sequences applicable in the initial state.
 
 Concrete example: line of locations $l_{-3} ... l_3$. Initially at
 $l_0$. Initial fuel $f$ something with $0 < f < 9$, let's say $f = 8$
 for simplicity.
 
 Plan properties \candprops\ considered: propositional formulas $\phi$
-over state variable values $x$ and end-of-plan state variable values
-$END x$, where $x$ is true if true anywhere along trajectory and $END
-x$ is true if true at end of trajectory.
+over state variable values $x$, true if $\phi$ is true anywhere along
+trajectory; also special atoms $END x$ true if $x$ is true at end of
+trajectory.
 
 Analyzed properties: initially $END visited(l_{-3})$, $END
-visited(l_3)$, $END \neg visited(l_{-3})$, $END \neg visited(l_3)$. As
+visited(l_3)$, $\neg END visited(l_{-3})$, $\neg END visited(l_3)$. As
 there is not enough fuel to visit both, we get the dependencies
-$\entails{\plans}{END visited(l_{-3})}{END \neg visited(l_3)}$ and
-$\entails{\plans}{END visited(l_3)}{END \neg visited(l_{-3})}$.
+$\entails{\plans}{END visited(l_{3})}{\neg END visited(l_{-3})}$ and
+its contrapositive $\entails{\plans}{END visited(l_{-3})}{\neg END
+  visited(l_{3})}$.
 
 To answer a WHY question reg these dependencies, how do we modify
 \props? It seems what we need to do is add conjunctions capturing the
 prerequisites for visiting both $l_{-3}$ and $l_3$. 
 
-This seems to relate to finding a set $C$ of conjunctions leading to
-$h^C(I) = \infty$ ... not sure though it's really the same thing.
+Does this relate to finding a set $C$ of conjunctions leading to
+$h^C(I) = \infty$? Not clear, no underlying critical-path mechanics
+here.
 
 If we add the properties $\{at(l_i)\}$ then we get dependencies of the
 form $\entails{\plans}{at(l_i)}{at(l_{i-1})}$ for $i > 0$ and
@@ -135,23 +138,92 @@ $\entails{\plans}{visited(l_{-3})}{at(l_{-3})}$ and
 $\entails{\plans}{visited(l_{3})}{at(l_{3})}$.
 
 This needs to be further refined. The simplest chain of dependencies
--- chain maximally fine-grained ands each element minimally
-restrictive -- I can think up (using numeric inequalities as
-abbreviation for disjunction over fuel values) is: $END visited(l_{3})
-\Rightarrow$ $END visited(l_{3}) \wedge at(l_{1}) \wedge fuel \leq 7
-\Rightarrow$ $END visited(l_{3}) \wedge at(l_{2}) \wedge fuel \leq 6
-\Rightarrow$ $at(l_{3}) \wedge fuel \leq 5 \Rightarrow$ $END
-visited(l_{-3}) \longrightarrow at(l_{2}) \wedge fuel \leq 4
-\Rightarrow$ $END visited(l_{-3}) \longrightarrow at(l_{1}) \wedge
-fuel \leq 3 \Rightarrow$ $END visited(l_{-3}) \longrightarrow
-at(l_{0}) \wedge fuel \leq 2 \Rightarrow$ $END visited(l_{-3})
-\longrightarrow at(l_{-1}) \wedge fuel \leq 1 \Rightarrow$ $END
-visited(l_{-3}) \longrightarrow at(l_{-2}) \wedge fuel \leq 0
-\Rightarrow$ $END visited(l_{-3}) \longrightarrow fuel < 0
-\Leftrightarrow$ $END visited(l_{-3}) \longrightarrow \false \Rightarrow$
-$END \neg visited(l_{-3})$.
+-- chain maximally fine-grained and each element minimally restrictive
+-- I can think up (using numeric inequalities as abbreviation for
+disjunction over fuel values) is: 
 
-\joerg{must it really be that awkward? TBD}
+$END visited(l_{3}) \Rightarrow$ 
+
+$END visited(l_{3}) \wedge at(l_{1}) \wedge fuel \leq 7 \Rightarrow$
+[need $END visited(l_{3})$ here for next step]
+
+$END visited(l_{3}) \wedge at(l_{2}) \wedge fuel \leq 6 \Rightarrow$
+
+$at(l_{3}) \wedge fuel \leq 5 \Rightarrow$ 
+
+$END visited(l_{-3}) \longrightarrow at(l_{2}) \wedge fuel \leq 4
+\Rightarrow$ 
+
+$END visited(l_{-3}) \longrightarrow at(l_{1}) \wedge fuel \leq 3
+\Rightarrow$ 
+
+$END visited(l_{-3}) \longrightarrow at(l_{0}) \wedge
+fuel \leq 2 \Rightarrow$ 
+
+$END visited(l_{-3}) \longrightarrow at(l_{-1}) \wedge fuel \leq 1
+\Rightarrow$
+
+$END visited(l_{-3}) \longrightarrow at(l_{-2}) \wedge fuel \leq 0
+\Rightarrow$
+
+$END visited(l_{-3}) \longrightarrow at(l_{-3}) \wedge \false
+\Rightarrow$ [$fuel < 0$ is \false]
+
+$\neg END visited(l_{-3})$.
+
+It is actually awkward here to insist on handling the top-level
+conclusion as an implication $\entails{\plans}{END visited(l_3)}{\neg
+  END visited(l_{-3})}$. The most natural way of viewing the
+dependency between the two goal facts is saying that their conjunction
+is unsatisfiable ie implies \false.
+
+Pitch this as a general method: prove implication
+$\entails{\plans}{A}{B}$ by unsatisfiability of $A \wedge \neg B$,
+with explanation showing that the latter implies \false in \plans. In
+the example, $\entails{\plans}{END visited(l_{3})}{\neg END
+  visited(l_{-3})}$ is explained by:
+
+$\plans \models END visited(l_{3}) \wedge END visited(l_{-3}) \Rightarrow$ 
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{1})
+\wedge fuel \leq 7 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{2})
+\wedge fuel \leq 6 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{3})
+\wedge fuel \leq 5 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{2})
+\wedge fuel \leq 4 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{1})
+\wedge fuel \leq 3 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{0})
+\wedge fuel \leq 2 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{-1})
+\wedge fuel \leq 1 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{-2})
+\wedge fuel \leq 0 \Rightarrow$
+
+$END visited(l_{3}) \wedge END visited(l_{-3}) \wedge at(l_{-3})
+\wedge \false \Rightarrow$ [$fuel < 0$ is \false]
+
+$\false$.
+
+This looks mechanizable, and the properties along the sequence could
+be gleaned from an ``almost plan'' where we allow the resource fuel to
+take on negative values. What's disturbing though is that, with the
+outset formula being unsatisfiable in \plans, all implications here
+are trivial; the sequence can contain \emph{arbitrary} conjunctions
+with that formula.
+
+
+
+
 
 %% Consider properties of the form $\{visited(l_{3}) \wedge at(l_i)
 %% \wedge fuel \leq x\}$. \joerg{TBD}
