@@ -8,6 +8,19 @@
 \subsection{Framework}
 
 \begin{itemize}
+\item Application to constraint-based planning: 
+
+  Same framework but additional input plan length bound B
+  $\Rightarrow$ translate into SAT/CP, leverage all the techniques on
+  unsat cores etc.
+
+  What if $B$ is not given as input, but instead e.g.\ we run a
+  planner once? Can we still leverage unsat core techniques etc? Seems
+  doubtful. The overall thing is unsolvable so we get no bound by
+  satisficing planning. Actually we need a bound on $max_{\pi \mbox{
+      plan for solvable goal subset}} |\pi|$ \dots\ how to compute
+  such a bound?
+
 \item Task properties? Boolean properties of task? Use these in our
   analyses just like plan properties?
 

@@ -33,6 +33,16 @@ Two different approaches:
   A different formulation of this (interchangeable if \plans\ is given
   as a set of plan properties enforced to be true) is to relax \prop.
 
+  Fundamentally, when \plans\ is given as a set of plan properties
+  enforced to be true, all possible such WHY quwstions are answered
+  when viewing all properties as analyzed, and identifying all
+  entailments over conjunctions thereof. From this point of view,
+  distinguishing ''enforced'' vs.\ ``analyzed'' is a conceptual setup
+  allowing to structure the kinds of questions and answers that will
+  be of interest -- as opposed to a big heap of information that
+  cannot be computer, or even if it could be computed would be too big
+  to be processed by a human user.
+
 \end{itemize}
 
 Combinations of the two could also make sense.
@@ -60,6 +70,15 @@ cause for $\entails{\plans}{\true}{taskAafter4pm}$ could be other
 things that must be done before task A, or could be energy consumption
 at different times of day. Critical path analysis /
 precondition/effect analysis / planning sub-problem analysis?
+
+Landmarks could help here? Like, A and B don't go together (in 10 days
+from now), because beforehand LM\_A and LM\_B don't go together (right
+now).
+
+Is there a logics equivalent to finding ``intermediate formulas
+between p and q''? Viewing formulas as assignment sets, starting at
+$[p]$ iteratively add a single more assignment from $[q]$ until
+reaching $[q]$?
 
 
 
@@ -179,7 +198,7 @@ is unsatisfiable ie implies \false.
 
 Pitch this as a general method: prove implication
 $\entails{\plans}{A}{B}$ by unsatisfiability of $A \wedge \neg B$,
-with explanation showing that the latter implies \false in \plans. In
+with explanation showing that the latter implies \false\ in \plans. In
 the example, $\entails{\plans}{END visited(l_{3})}{\neg END
   visited(l_{-3})}$ is explained by:
 
@@ -219,9 +238,11 @@ be gleaned from an ``almost plan'' where we allow the resource fuel to
 take on negative values. What's disturbing though is that, with the
 outset formula being unsatisfiable in \plans, all implications here
 are trivial; the sequence can contain \emph{arbitrary} conjunctions
-with that formula.
-
-
+with that formula. In resolution proofs, it's different because the
+steps in the derivation sequence are syntactical manipulations, not
+semantic entailments. I conclude that this approach is fundamentally
+broken because there is no way to decide what can vs cannot be in the
+entailment sequence.
 
 
 

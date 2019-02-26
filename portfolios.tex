@@ -1,0 +1,135 @@
+\section{Discussion of work on Portfolios/Ideas}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Use of Planning + CP in Quantum Circuit Compilation}
+
+\begin{itemize}
+
+\item portfolio for selecting seed plan for CP optimizer, in a
+  formulation of quantum circuit compilation (quantum curcuit =
+  quantum algorithm)
+
+\item for given harware, need task allocation (instructions to places
+  on hardware) and routing (get the bits there) to compile algorithm
+  onto hardware
+
+\item find solution easy, optiomization is the hard/important part
+
+\item can be formulated as planning problem; can also be formulated as
+  CSP
+
+\item most successful approach so far is hybrid where plan seeds CSP
+  local plan-opt search; tried LPG as alternative but got stuck on a
+  bug
+
+\item working on this for quantum algorithm for grah coloring
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Portfolios as Rational Decision Making}
+
+\begin{itemize}
+
+\item bandit problem? cost = solver time spent, payoff =
+  search/optimization trade-off? switch between portfolio options by
+  standard bandit decision strategies?
+
+\item not good match for the above above, as ``options'' there are not
+  blackboxes
+
+\item planner selection for small set of candidates? switch between
+  planners online during search, based on measures of progress?
+  smallish number of planners, not a million but like 5-20.
+
+\item is ArvandHerd related to this?
+
+\item Some literature:
+
+  bandits problems and methods:
+
+  \url{https://en.wikipedia.org/wiki/Multi-armed_bandit}
+
+  2004 paper by chris beck on portfolio method in CSP optimization context:
+
+  \url{https://www.aaai.org/Papers/AAAI/2004/AAAI04-008.pdf}
+
+  learn a Bayesian classifier from historial ``who was best when''
+  data
+
+\item measure of progress: heuristic fn value? \#new landmarks
+  achieved?
+
+\item how to align \& compare measure of progress across
+  planners/arms? requires scale normalization.
+
+\item heuristic search: 
+
+  best done with same measure of progress, from same h fn used in
+  diverse searches (hm not clear correlation between arms would be
+  very high)? 
+
+  or use some h fn everywhere, take interval [0,h(i)] as range, map
+  this onto [0,1] for every h?
+
+  or maybe landmarks as measure agnostic of how the search is actually
+  being driven? 
+
+\item broader space of algorithms, like FF vs satplan: totally unclear
+  how to compare mesasures of progress. 
+
+  maybe extract some kind of ``best plan candidate so far'' from each,
+  and compare a ``number of flaws'' criterion?
+
+\item limiting assumption: prob distribution over progress is fixed;
+  whereas actually it changes over time during the search. 
+
+  Not clear whether or not this is a problem in practice.
+
+\item maybe contextual bandit/adding features can help to more quickly
+  detect plateaus and discorage/disvalue an arm/a search that has
+  entered a plateau?
+
+\item Probability of reaching of 0? expected number of iterations
+  until reaching 0? I suppose this is not covered by/cannot be modeled
+  in bandit theory.
+
+\end{itemize}

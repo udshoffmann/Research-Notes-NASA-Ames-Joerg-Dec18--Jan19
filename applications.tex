@@ -1,4 +1,24 @@
-\section{Application Characteristics/Models}
+\section{NASA Application Characteristics/Models}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Mission Planning}
 
@@ -144,6 +164,151 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{J. UAV Planning}
+
+
+\subsubsection{Abstract / Status}
+
+\begin{itemize}
+
+\item UAV (mobility vehicle, air taxis). initial stages; 4- year
+  perspective but depends on Uber
+
+\item planning for individual UAV; airway traffic lanes, possible
+  restrictions on speed etc; online replanning in case of need; take
+  care of safety ie energy/battery, and possibility for emergency
+  landings
+
+\item planning is path over waypoints (predefined, static, at airway
+  intersections), autopilot flies those; only cause for failure is
+  traffic
+
+\item language: Animal by David; hierarchical + numeric
+  etc. replanning within segment of hierarchical plan.
+
+\item simulator: NASA-made (faithful and fast-time). deterministic
+  (physics of flying, under any wind conditions).
+
+\item status: initial model in Animal; Plexil plan executor connecting
+  to simulator; connected to fast-time simulator, can look at
+  execution.
+
+
+\end{itemize}
+
+
+
+
+\subsubsection{Possible questions of common interest}
+
+\begin{itemize}
+
+\item Could NASA simulator be used, under a strict agreement?
+  exceedingly difficult, probably; contains some Boeing code.
+
+\item possible connection in context of online decision making /
+  real-time search + safety, cf Wheeler and C6 (see below)
+
+\item battery models a la Holger Hermanns? current plan is to assume
+  some worst-case bound on battery behaviour, and restrict plan to
+  remain in safe zone (proximity to landing areas) given that bound
+
+\item Link to C6 (below): what kinds of models? continous? nondet?
+  risk explicit?
+
+\item Jeremy's abstraction predicate idea, linking state variabe
+  values to continuous regions via explicit predicates on continuous
+  space?
+
+\end{itemize}
+
+
+
+
+
+\subsubsection{Discussion model vs plans for drones in Explanation-SFB C6}
+
+\begin{itemize}
+
+\item PDDL style planning really makes sense only for waypoint
+  map. temporal planning to model speed, timed initial literals to
+  model known/expected trajectories of foreign vehicles.
+
+\item more natural: MAP with non-controlled agents whose actions are
+  fixed. could invent new PDDL dialect for this ...
+
+\item 3D/geometric model really too hard in PDDL: pos-vector +
+  speed*direction-vector is easy enough, but how to check that line
+  between start/end points does not pass through blocked region? not
+  possible. Even if possible, awkward and ineffective.
+
+\item For simple planning language, without timed initial literals,
+  could use simpler application where we control a drone (fleet) and
+  the only dynamic element are new jobs (ie no moving obstacles are
+  considered); here thinking fast online is important (only) as
+  thinking longer may result in business value loss.
+
+\item Holger's MC language: seems promising to J., also synergies with
+  program analysis etc. But is it nice to model? Do the choice points
+  make sense for planning?
+
+\item Start with the simple application and language.
+
+  Could just be standard PDDL and FD, to maximize simplicity (or
+  numeric, but not sure I see use for numbers; fuel/battery simple
+  model maybe).
+
+  Could be a domain-specific setting, towards DFKI autonomous driving
+  or autonomous drones, where we pick a simple programming-language
+  state representation and implement ML policy and checks on top of
+  that.
+
+  Eventually, move to MC language?
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \subsection{Robot Arm Planning}
 
 \begin{itemize}
@@ -189,6 +354,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Levitating-Robot-with-Fans (better name?) Planning}
 
